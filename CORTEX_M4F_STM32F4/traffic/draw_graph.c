@@ -102,3 +102,9 @@ void DrawBackground(void)
 		LCD_DrawLine(graph->x, graph->y, graph->wl.len, graph->hd.dir);
 	}
 }
+void DrawUsartReceive(uint8_t *str){
+	
+    LCD_SetTextColor(LCD_COLOR_RED);
+	LCD_DisplayStringLine(LCD_LINE_1,str);
+
+}
