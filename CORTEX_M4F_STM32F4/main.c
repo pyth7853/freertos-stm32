@@ -219,7 +219,14 @@ void USART1_Configuration(void)
     USART_Init(USART1, &USART_InitStructure);
     USART_Cmd(USART1, ENABLE);
 }
-
+void USART1_puts(char* s)
+{
+    while(*s) {
+        while(USART_GetFlagStatus(USART1, USART_FLAG_TXE) == RESET);
+        USART_SendData(USART1, *s);
+        s++;
+    }
+}
 static void UsartTask(void *pvParameters)
 {
     RCC_Configuration();
