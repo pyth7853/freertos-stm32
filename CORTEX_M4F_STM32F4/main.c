@@ -236,6 +236,8 @@ static void UsartTask(void *pvParameters)
     USART1_puts("Hello World!\r\n");
     USART1_puts("Just for STM32F429I Discovery verify USART1 with USB TTL Cable\r\n");
 
+	char strLcd[20]="";
+	int i=0;
     while(1)
     {
         while(USART_GetFlagStatus(USART1, USART_FLAG_RXNE) == RESET);
