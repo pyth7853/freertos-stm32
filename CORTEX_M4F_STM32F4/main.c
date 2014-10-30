@@ -52,6 +52,30 @@ static int states[] = {TRAFFIC_RED, TRAFFIC_YELLOW, TRAFFIC_GREEN,
 							TRAFFIC_YELLOW};
 static float axes[3] = {0};
 
+static char* itoa(int value, char* result, int base)
+{
+	if (base < 2 || base > 36) {
+		*result = '\0';
+		return result;
+	}
+	char *ptr = result, *ptr1 = result, tmp_char;
+	int tmp_value;
+
+	do {
+		tmp_value = value;
+		value /= base;
+		*ptr++ = "zyxwvutsrqponmlkjihgfedcba9876543210123456789abcdefghijklmnopqrstuvwxyz" [35 + (tmp_value - value * base)];
+	} while (value);
+
+	if (tmp_value < 0) *ptr++ = '-';
+	*ptr-- = '\0';
+	while (ptr1 < ptr) {
+		tmp_char = *ptr;
+		*ptr-- = *ptr1;
+		*ptr1++ = tmp_char;
+	}
+	return result;
+}
 void
 prvInit()
 {
@@ -297,6 +321,24 @@ static void Gyroscope_Update(void)
 //		axes[i] += a[i]*delta / 114.285f;
 	}
 
+}
+static void Gyroscope_Render(void)
+{
+	LCD_ClearLine(LCD_LINE_5);
+	LCD_ClearLine(LCD_LINE_6);
+	LCD_ClearLine(LCD_LINE_7);
+
+	LCD_SetTextColor( LCD_COLOR_RED );
+
+	char str[16] = "X: ";
+	itoa(axes[0], str + 3, 10);
+	LCD_DisplayStringLine(LCD_LINE_5, str);
+	str[0] = 'Y';
+	itoa(axes[1], str + 3, 10);
+	LCD_DisplayStringLine(LCD_LINE_6, str);
+	str[0] = 'Z';
+	itoa(axes[2], str + 3, 10);
+	LCD_DisplayStringLine(LCD_LINE_7, str);
 }
 
 static void GyroscopeTask(void *pvParameters)
