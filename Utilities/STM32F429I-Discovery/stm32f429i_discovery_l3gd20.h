@@ -387,7 +387,7 @@ void L3GD20_Read(uint8_t* pBuffer, uint8_t ReadAddr, uint16_t NumByteToRead);
 uint32_t L3GD20_TIMEOUT_UserCallback(void);
 
 #ifdef __cplusplus
-}
+
 #endif
 
 #endif /* __STM32F429I_DISCOVERY_L3GD20_H */
