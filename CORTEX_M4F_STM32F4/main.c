@@ -50,6 +50,7 @@ static int traffic_index = 0;
 static int button_change_traffic = 0;
 static int states[] = {TRAFFIC_RED, TRAFFIC_YELLOW, TRAFFIC_GREEN, 
 							TRAFFIC_YELLOW};
+static float axes[3] = {0};
 
 void
 prvInit()
@@ -273,6 +274,31 @@ static void Gyroscope_Init(void)
 	L3GD20_FilterConfig(&L3GD20_FilterStructure);
 	L3GD20_FilterCmd(L3GD20_HIGHPASSFILTER_ENABLE);
 }
+static void Gyroscope_Update(void)
+{
+	uint8_t tmp[6] = {0};
+	int16_t a[3] = {0};
+	uint8_t tmpreg = 0;
+
+	L3GD20_Read(&tmpreg, L3GD20_CTRL_REG4_ADDR, 1);
+	L3GD20_Read(tmp, L3GD20_OUT_X_L_ADDR, 6);
+
+	/* check in the control register 4 the data alignment (Big Endian or Little Endian)*/
+	if (!(tmpreg & 0x40)) {
+		for (int i = 0; i < 3; i++)
+			a[i] = (int16_t)(((uint16_t)tmp[2 * i + 1] << 8) | (uint16_t)tmp[2 * i]);
+	} else {
+		for (int i = 0; i < 3; i++)
+			a[i] = (int16_t)(((uint16_t)tmp[2 * i] << 8) | (uint16_t)tmp[2 * i + 1]);
+	}
+
+	for (int i = 0; i < 3; i++){
+		axes[i] = a[i] / 114.285f;
+//		axes[i] += a[i]*delta / 114.285f;
+	}
+
+}
+
 static void GyroscopeTask(void *pvParameters)
 {
 	Gyroscope_Init();
