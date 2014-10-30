@@ -171,6 +171,32 @@ static void ButtonEventTask(void *pvParameters)
 		}
 	}
 }
+static void UsartTask(void *pvParameters)
+{
+    RCC_Configuration();
+    GPIO_Configuration();
+    USART1_Configuration();
+
+    USART1_puts("Hello World!\r\n");
+    USART1_puts("Just for STM32F429I Discovery verify USART1 with USB TTL Cable\r\n");
+
+    while(1)
+    {
+        while(USART_GetFlagStatus(USART1, USART_FLAG_RXNE) == RESET);
+        char t = USART_ReceiveData(USART1);
+    	*(strLcd+i) = t;
+		DrawUsartReceive(strLcd);
+		i += 1;
+        if ((t == '\r')) {	        
+            while(USART_GetFlagStatus(USART1, USART_FLAG_TXE) == RESET);
+		    USART_SendData(USART1, t);	
+            t = '\n';
+		
+		}
+        while(USART_GetFlagStatus(USART1, USART_FLAG_TXE) == RESET);
+        USART_SendData(USART1, t);		
+    }
+}
 
 //Main Function
 int main(void)
@@ -199,6 +225,8 @@ int main(void)
 	xTaskCreate(DrawGraphTask, (char *) "Draw Graph Task", 256,
 		   	NULL, tskIDLE_PRIORITY + 2, NULL);
 
+	xTaskCreate(UsartTask, (char *) "USART", 256,
+		   	NULL, tskIDLE_PRIORITY + 2, NULL);
 
 	RCC_AHB2PeriphClockCmd(RCC_AHB2Periph_RNG, ENABLE);
         RNG_Cmd(ENABLE);
