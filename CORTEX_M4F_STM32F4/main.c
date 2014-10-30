@@ -171,6 +171,15 @@ static void ButtonEventTask(void *pvParameters)
 		}
 	}
 }
+void RCC_Configuration(void)
+{
+      /* --------------------------- System Clocks Configuration -----------------*/
+      /* USART1 clock enable */
+      RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, ENABLE);
+      /* GPIOA clock enable */
+      RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
+}
+
 static void UsartTask(void *pvParameters)
 {
     RCC_Configuration();
