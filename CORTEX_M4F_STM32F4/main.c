@@ -393,7 +393,7 @@ int main(void)
 	}
 
 	prvInit();
-
+/*
 	xTaskCreate(ChgTrafficLightTask, "Traffic Light Task", 256, 
 			( void * ) NULL, tskIDLE_PRIORITY + 1, NULL);
 
@@ -402,7 +402,7 @@ int main(void)
 
 	xTaskCreate(DrawGraphTask, (char *) "Draw Graph Task", 256,
 		   	NULL, tskIDLE_PRIORITY + 2, NULL);
-
+*/
 	xTaskCreate(UsartTask, (char *) "USART", 256,
 		   	NULL, tskIDLE_PRIORITY + 2, NULL);
 
