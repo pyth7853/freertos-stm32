@@ -51,6 +51,7 @@ static int button_change_traffic = 0;
 static int states[] = {TRAFFIC_RED, TRAFFIC_YELLOW, TRAFFIC_GREEN, 
 							TRAFFIC_YELLOW};
 static float axes[3] = {0};
+int count = 0;
 
 static char* itoa(int value, char* result, int base)
 {
@@ -339,6 +340,31 @@ static void Gyroscope_Render(void)
 	str[0] = 'Z';
 	itoa(axes[2], str + 3, 10);
 	LCD_DisplayStringLine(LCD_LINE_7, str);
+
+	
+
+	if(axes[2]>100){
+		LCD_SetTextColor( 0x227700);
+		LCD_DrawFullRect( 50+count, 50, 20, 10);
+		count++;
+	}
+
+	
+	if(axes[2]< -100){
+		LCD_SetTextColor( 0xFFFFFF);
+		LCD_DrawFullRect( 50+count, 10, 20, 10);
+		count++;
+	}
+	if(axes[0] > 250 || 	axes[0] < -250){
+
+		LCD_Clear( 0xEEEE00 );
+	 	count = 0;
+	}
+	if(axes[1] > 250 || 	axes[1] < -250){
+
+		LCD_Clear( LCD_COLOR_RED );
+	 	count = 0;
+	}
 }
 
 static void GyroscopeTask(void *pvParameters)
