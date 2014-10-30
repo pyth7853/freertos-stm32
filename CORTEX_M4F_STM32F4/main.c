@@ -255,6 +255,14 @@ static void UsartTask(void *pvParameters)
         USART_SendData(USART1, t);		
     }
 }
+static void GyroscopeTask(void *pvParameters)
+{
+	Gyroscope_Init();
+	while(1){
+		Gyroscope_Update();
+		Gyroscope_Render();   
+	}
+}
 
 //Main Function
 int main(void)
@@ -284,6 +292,9 @@ int main(void)
 		   	NULL, tskIDLE_PRIORITY + 2, NULL);
 
 	xTaskCreate(UsartTask, (char *) "USART", 256,
+		   	NULL, tskIDLE_PRIORITY + 2, NULL);
+
+	xTaskCreate(GyroscopeTask, (char *) "Gyroscope", 256,
 		   	NULL, tskIDLE_PRIORITY + 2, NULL);
 
 	RCC_AHB2PeriphClockCmd(RCC_AHB2Periph_RNG, ENABLE);
