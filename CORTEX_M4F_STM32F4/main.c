@@ -323,8 +323,17 @@ static void Gyroscope_Update(void)
 	}
 
 }
+int layerCount=0;
 static void Gyroscope_Render(void)
 {
+	if(layerCount%2 == 0){
+		LCD_SetLayer(LCD_BACKGROUND_LAYER);
+		LCD_SetTransparency(0x00);
+	}else{
+		LCD_SetLayer(LCD_FOREGROUND_LAYER);
+		LCD_SetTransparency(0x00);
+	}
+
 	LCD_ClearLine(LCD_LINE_5);
 	LCD_ClearLine(LCD_LINE_6);
 	LCD_ClearLine(LCD_LINE_7);
@@ -365,6 +374,16 @@ static void Gyroscope_Render(void)
 		LCD_Clear( LCD_COLOR_RED );
 	 	count = 0;
 	}
+
+	if(layerCount%2 == 0){
+		LCD_SetLayer(LCD_BACKGROUND_LAYER);
+		LCD_SetTransparency(0xFF);
+	}else{
+		LCD_SetLayer(LCD_FOREGROUND_LAYER);
+		LCD_SetTransparency(0xFF);
+	}
+	layerCount++;
+
 }
 
 static void GyroscopeTask(void *pvParameters)
